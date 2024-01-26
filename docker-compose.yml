@@ -1,0 +1,60 @@
+version: "2.1"
+services:
+
+  ipxe:
+    image: ipxe
+    container_name: ipxe
+    depends_on:
+      tftpd:
+        condition: service_started
+      nginx:
+        condition: service_started
+    environment:
+      - LC_ALL=C
+      - LC_CTYPE=en_US.UTF-8
+      - LC_MESSAGES=en_US.UTF-8
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US.UTF-8
+      - DEBIAN_FRONTEND=noninteractive
+    build:
+      context: ./
+    volumes:
+      - ${PWD}/tftpd/srv/tftp:/srv/tftp
+      - ${PWD}/nginx/usr/share/nginx/html:/usr/share/nginx/html
+    ports:
+      - 1111:1111/udp
+    restart: unless-stopped
+
+
+  tftpd:
+    image: tftpd:latest
+    container_name: tftpd
+    environment:
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US.utf-8
+      - DEBIAN_FRONTEND=noninteractive
+    build:
+      context: ./tftpd
+    volumes:
+      - ${PWD}/tftpd/srv/tftp:/srv/tftp
+    ports:
+      - 69:69/udp
+    restart: unless-stopped
+
+
+  nginx:
+    image: nginx:stable-bullseye-perl
+    container_name: nginx
+    environment:
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US.utf-8
+      - DEBIAN_FRONTEND=noninteractive
+    #build:
+    #  context: ./nginx
+    volumes:
+      - ${PWD}/nginx/usr/share/nginx/html:/usr/share/nginx/html
+      - ${PWD}/nginx/etc/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - 80:80/tcp
+    restart: unless-stopped
+

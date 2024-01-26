@@ -1,0 +1,17 @@
+version: "2.1"
+services:
+  tftpd:
+    image: tftpd
+    container_name: tftpd
+    environment:
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US.utf-8
+      - DEBIAN_FRONTEND=noninteractive
+    build:
+      context: ./
+    volumes:
+      - /mnt/clonezilla/tftpboot:/srv/tftp
+      #- /tftpboot:/srv/tftp
+    ports:
+      - 69:69/udp
+    restart: unless-stopped

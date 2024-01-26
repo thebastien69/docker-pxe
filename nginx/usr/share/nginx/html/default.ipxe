@@ -1,0 +1,5 @@
+#!ipxe
+echo Configure dhcp ....
+dhcp
+chain http://10.100.110.195/boot-http.ipxe
+

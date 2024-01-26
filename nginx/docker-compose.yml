@@ -1,0 +1,16 @@
+version: "2.1"
+services:
+  nginx:
+    image: nginx:stable-bullseye-perl
+    container_name: nginx
+    environment:
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US.utf-8
+      - DEBIAN_FRONTEND=noninteractive
+    build:
+      context: ./
+    volumes:
+      - /mnt/clonezilla/var/www/html:/var/www/html
+    ports:
+      - 80:80/tcp
+    restart: unless-stopped

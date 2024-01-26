@@ -1,0 +1,48 @@
+#!ipxe
+
+# define current HTTP server
+set http-server http://10.100.110.195
+
+
+# Redefine menu colors
+colour --rgb 0x314085 1
+colour --rgb 0xbdb605 2
+cpair --foreground 7 --background 1 2
+cpair --foreground 2 3
+
+# Set background
+console --picture ${boot-url}/background.png
+
+# Set menu title (strangely no visible)
+menu Eolane Super iPXE SERVER
+
+item --gap Backup and Restore :
+item
+item --key r rescuezilla        Boot with RescueZilla
+item --key a activebackup       Boot with ActiveBackup
+item
+item --key x cancel             Exit iPXE and reboot
+choose selected || goto cancel
+goto ${selected}
+
+:cancel
+echo You cancelled the menu, reboot
+reboot
+
+:rescuezilla
+echo RescueZilla boot started
+imgfree
+
+#kernel /rescuezilla/vmlinuz toram  boot=casper locale=fr_FR quiet splash vga=794 fastboot toram config lang=fr_FR.UTF-8 locales=fr_FR.UTF-8 bootkbd=fr keyboard-layouts=fr console-setup/layoutcode=fr ip=dhcp url=$(http-server)/rescuezilla/rescuezilla.iso  root=/dev/ram0 ramdisk_size=1500000  root=/dev/ram0 ramdisk_size=1500000
+kernel /rescuezilla/vmlinuz toram  boot=casper locale=fr_FR quiet splash vga=794 fastboot toram config lang=fr_FR.UTF-8 locales=fr_FR.UTF-8 bootkbd=fr keyboard-layouts=fr console-setup/layoutcode=fr ip=dhcp url=http://10.100.110.195/rescuezilla/rescuezilla.iso  root=/dev/ram0 ramdisk_size=1500000  root=/dev/ram0 ramdisk_size=1500000
+
+initrd /rescuezilla/initrd.lz
+boot
+
+:activebackup
+kernel /activebackup/wimboot
+initrd /activebackup/BCD         BCD
+initrd /activebackup/boot.sdi    boot.sdi
+initrd /activebackup/boot.wim boot.wim
+boot
+

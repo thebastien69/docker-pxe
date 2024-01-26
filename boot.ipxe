@@ -1,0 +1,5 @@
+#!ipxe
+# modify and copy this file in ipxe/src before compiling
+echo Configure dhcp ....
+dhcp
+chain http://10.100.110.195/boot-http.ipxe
