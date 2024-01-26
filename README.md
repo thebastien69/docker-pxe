@@ -10,8 +10,10 @@ https://github.com/ipxe/ipxe/
 
 ## What do you need ?
 
-You need a Debian distrib. It should work on another distrib provided that you change the script runme1st.sh
-You need docker and git.
+You need a Debian distrib.
+It should work on another distrib provided that you change the script runme1st.sh
+
+You also need docker and git.
 
 ## Configuration
 
